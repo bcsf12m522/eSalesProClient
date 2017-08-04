@@ -69,7 +69,8 @@
 
                             <div class="col-md-12">
 
-
+                                <!-- SUPPLIER BORDER TD RANGLERZ.CSS  1503 COMMENTED -->
+                                
                                 <table border="0" class="table table-responsive border_black" id="supplier_table">
                                     <thead>
                                         <tr class="table-heading-fonts table-main-headings">
@@ -96,12 +97,12 @@
                                             @*<tr data-toggle="modal" data-target="#EditModal">*@
 
                                             <tr>
-                                                <td class="border-right-td" data-title="User ID">@v.Id</td>
-                                                <td class="border-right-td" data-title="User ID">@v.Name</td>
-                                                <td class="border-right-td" data-title="First Name">@v.Phone</td>
-                                                <td class="border-right-td" data-title="Last Name">@v.Email</td>
-                                                <td class="border-right-td" data-title="Email">@v.Address</td>
-                                                <td class="border-right-td" data-title="Date Registered">@v.Post_Code</td>
+                                                <td class="border-right-td text-center" data-title="User ID">@v.Id</td>
+                                                <td class="border-right-td text-center" data-title="User ID">@v.Name</td>
+                                                <td class="border-right-td text-center" data-title="First Name">@v.Phone</td>
+                                                <td class="border-right-td text-center" data-title="Last Name">@v.Email</td>
+                                                <td class="border-right-td text-center" data-title="Email">@v.Address</td>
+                                                <td class="border-right-td text-center" data-title="Date Registered">@v.Post_Code</td>
 
                                                 @if (@v.Is_Active == 1)
                                                 {
@@ -112,19 +113,21 @@
                                                     <td class="red border-right-td">Deactive</td>
                                                 }
 
-                                                <td data-title="Actions" style="min-width:191px" class="text-center buttons-block">
+                                                <td data-title="Actions" class="text-center buttons-block width-140">
                                                     <a class="btn btn-sm btn-info bold" href="" data-toggle="modal" data-target="#EditModal" onclick="GetEditedObject(@v.Id)">
                                                         Edit
                                                     </a>
                                                     @*<a class="btn btn-sm btn-success bold" href="~/Supplier/Active/@v.Id">
                                                         Enable
                                                     </a>*@
-                                                    <a class="btn btn-sm btn-danger bold" href="~/Supplier/Disable/@v.Id">
+                                                    <a class="btn btn-sm btn-danger bold" onclick="delete_supplier_without_confirmation(@v.Id)" @*onclick="delete_supplier(@v.Id)" href="~/Supplier/Disable/@v.Id"*@>
                                                         Delete
                                                     </a>
+
                                                 </td>
                                             </tr>
                                         }
+
                                     </tbody>
 
                                 </table>
@@ -134,7 +137,39 @@
 
                             </div>
 
+                        <script>
 
+                            function delete_supplier_without_confirmation(Id) {
+                                window.location.href = 'Disable/' + Id;
+                            }
+
+                            //function delete_supplier(id){
+
+
+
+                            //    swal({
+                            //            title: "Are you sure?",
+                            //            text: "You will not be able to recover this Supplier!",
+                            //            type: "warning",
+                            //            showCancelButton: true,
+                            //            confirmButtonColor: "#DD6B55",
+                            //            confirmButtonText: "Yes, delete it!",
+                            //            closeOnConfirm: false
+                            //        },
+                            //        function (isConfirmed) {
+                            //            if (isConfirmed) {
+
+                            //                window.location.href='Disable/' + id;
+
+                            //                //$(".file").addClass("isDeleted");
+                            //                swal("Deleted!", "Your Supplier has been deleted.", "success");
+                            //            }
+                            //        }
+                            //      );
+
+                            //}
+
+                        </script>
 
 
 
@@ -145,7 +180,6 @@
                 </div>
                 @*-----------------Main Container Ends---------------*@
             </div>
-
 
             <div id="sticky-footer-push"></div>
         </div>
@@ -158,7 +192,111 @@
         }
     </footer>
 
+    @*----------------------------POP UP for POSTCODE CONFIRMATION--------------------------------*@
 
+    <div style="z-index:9999" class="modal fade" id="Postcode_Confirmation" tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content modal-style-custom">
+
+                <div class="title col-md-12">
+                    <span>Confirm</span>
+                    <img src="~/img/images/c3.png" class="close mr--13 pull-right" data-dismiss="modal" onclick="close_modal()" />
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+
+                        <div id="" class="black-color">
+                            <div class="empty-height"></div><div class="empty-height"></div>
+                            <div class="text-center"><p class="color"><b>Please confirm below address <br />If correct, press ok</b></p></div>
+
+                            <div class="empty-height"></div><div class="empty-height"></div>
+
+                            <div class="text-center italic">
+                                <label id="street_postcode"></label><br />
+                            </div>
+                            <div class="text-center italic">
+                                <label id="town_postcode"></label><br />
+                            </div>
+                            <div class="text-center italic">
+                                <label id="county_postcode"></label><br />
+                            </div>
+                            <div class="text-center italic">
+                                <label id="postcode_popup"><span> ?</span></label><br />
+                            </div>
+
+
+
+
+
+                                        <div class="empty-height"></div>
+                      
+
+
+
+
+
+                            <div class="col-md-12">
+
+                                
+                                <div class="col-md-6">
+                                    <input type="button" onclick="Add_Postcode_New_Supplier()" value="Add" class="btn btn-success btn-mini center-block width-95">
+                                </div>
+
+
+                                <script>
+                                    function Add_Postcode_New_Supplier() {
+                                        var street_add = $("#street_postcode").html();
+                                        var town_add = $("#town_postcode").html();
+                                        var county_add = $("#county_postcode").html();
+                                        var postcode_add = $("#postcode_popup").html();
+
+                                        $("#add_street_postcode").val(street_add);
+                                        $("#add_town_postcode").val(town_add);
+                                        $("#add_county_postcode").val(county_add);
+
+                                        $("#Postcode_Confirmation").hide();
+                                        //$("#").val(postcode_add);
+                                        
+                                    }
+
+
+                                </script>
+
+
+                                <div class="col-md-6">
+                                    <input type="button" value="Cancel" class="btn btn-primary btn-mini center-block width-95" onclick="close_modal()">
+                                </div>
+                                
+
+
+
+                            </div>
+
+
+                                        <div class="col-md-12">
+                                            <div class="col-md-3"></div>
+
+
+                                            <div class="col-md-3"></div>
+
+
+
+                                        </div>
+
+
+                                    </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer"></div>
+                <div class=""></div>
+
+            </div>
+        </div>
+    </div>
+
+    @*----------------------------POP UP for POSTCODE CONFIRMATION--------------------------------*@
 
     @*----------------------------POP UP for EDIT SUPPLIER--------------------------------*@
 
@@ -362,7 +500,7 @@
                                         <div class="form-group">
                                             <label class="supplier-create-texts ml-22" for="middle-name">Postcode<span class="required">*</span></label>
                                             <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" class="ml--50" name="postcode" id="postcode">
+                                                <input type="text" class="ml--50" name="postcode" id="postcode_edit">
                                                 <a href="#"><img src="~/img/images/ssearch.png" id="input_img" /></a>
                                             </div>
                                         </div>
@@ -871,9 +1009,9 @@
                                         <div class="form-group">
                                             <label class="supplier-create-texts" for="middle-name">Address<span class="required">*</span></label>
                                             <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input class="ml--50" type="text" name="address1" required>
-                                                <input class="ml--50" type="text" name="address2">
-                                                <input class="ml--50" type="text" name="address3">
+                                                <input class="ml--50" type="text" name="address1" id="add_street_postcode" required>
+                                                <input class="ml--50" type="text" name="address2" id="add_town_postcode">
+                                                <input class="ml--50" type="text" name="address3" id="add_county_postcode">
                                                 <input class="ml--50" type="text" name="address4">
                                                 <input class="ml--50" type="text" name="address5">
                                             </div>
@@ -882,8 +1020,8 @@
                                         <div class="form-group">
                                             <label class="supplier-create-texts" for="middle-name">Postcode<span class="required">*</span></label>
                                             <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input class="ml--50" type="text" name="postcode">
-                                                <a href="#"><img src="~/img/images/ssearch.png" id="input_img" /></a>
+                                                <input class="ml--50" type="text" name="postcode" id="postcode_add">
+                                                <a href="#" onclick="postcode_testing()" @*data-target="#Postcode_Confirmation" data-toggle="modal"*@><img src="~/img/images/ssearch.png" id="input_img" /></a>
                                             </div>
                                         </div>
 
@@ -991,6 +1129,94 @@
     @*----------------------------POP UP END ADD SUPPLIER--------------------------------*@
 
 
+
+    @*----------------------------POP UP LOGOUT SESSION--------------------------------*@
+
+
+
+    
+
+
+    
+
+
+
+    @*----------------------------POP UP LOGOUT SESSION--------------------------------*@
+
+
+    <script>
+    function close_modal() {
+        $("#Postcode_Confirmation").hide();
+    }
+
+    function postcode_testing() {
+
+        var postcode = $("#postcode_add").val().toUpperCase();
+        //alert(postcode);
+
+        if (postcode == null || postcode == "") {
+            //alert("IF");
+            swal({
+                title: "POSTCODE FIELD IS EMPTY",
+                text: "You have to Enter some Postcode",
+                type: "warning",
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Okay',
+            })
+
+            return false;
+            postcode_testing()
+        }
+
+        //Get latitude & longitude
+        $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?address=' + postcode + '&sensor=false', function (data) {
+
+
+            var siteArray = data.siteArray;
+
+            // Handle the case where the user may not belong to any groups
+            if (siteArray === null || siteArray === undefined || siteArray === '' || siteArray.length === 0) {
+                $("#street_postcode").text("null");
+                $("#town_postcode").text("null");
+                $("#county_postcode").text("null");
+                $("#postcode_popup").text(postcode);
+
+                $("#Postcode_Confirmation").addClass("in").show("slow");
+            }
+
+            var lat = data.results[0].geometry.location.lat;
+            var lng = data.results[0].geometry.location.lng;
+            //alert("lng  " + lng);
+
+            //Get address
+            $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&sensor=false', function (data) {
+
+                var address = data.results[0].address_components;
+                var street = address[1].long_name;
+                var town = address[2].long_name;
+                var county = address[3].long_name;
+
+                $("#street_postcode").text(street);
+                $("#town_postcode").text(town);
+                $("#county_postcode").text(county);
+                $("#postcode_popup").text(postcode);
+
+                //alert(address);
+
+                $("#Postcode_Confirmation").addClass("in").show("slow");
+
+                //Insert
+                //alert("street  " + street + ', ' + "   town   " + town + ', ' + "    county  " + county + ', ' + "    postcode  " + postcode);
+
+            });
+        });
+    }
+    </script>
+
+
+
+
+
     <script src="~/Scripts/new-js/jquery-1.11.1.min.js"></script>
     <script src="~/Scripts/new-js/jquery.datatables.min.js"></script>
 
@@ -1054,15 +1280,8 @@
     }
 
 
-
+  
 
     </script>
-
-
-    @*</script>
-    </script>
-    </script>*@
-
-
 
 </body>

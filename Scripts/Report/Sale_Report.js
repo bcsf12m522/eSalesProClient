@@ -1,6 +1,6 @@
 ﻿function findByUser() {
-    $("#loader_div").show();
 
+    $("#loader_div").show();
     $("#customer_summary").hide();
     $("#date_click_div").hide();
     var user = document.getElementById('User_ID').value;
