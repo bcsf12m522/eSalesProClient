@@ -101,7 +101,7 @@
                                                 <td class="border-right-td text-center" data-title="User ID">@v.Name</td>
                                                 <td class="border-right-td text-center" data-title="First Name">@v.Phone</td>
                                                 <td class="border-right-td text-center" data-title="Last Name">@v.Email</td>
-                                                <td class="border-right-td text-center" data-title="Email">@v.Address</td>
+                                                <td class="border-right-td text-center" data-title="Email">@v.Street</td>
                                                 <td class="border-right-td text-center" data-title="Date Registered">@v.Post_Code</td>
 
                                                 @if (@v.Is_Active == 1)
@@ -114,7 +114,8 @@
                                                 }
 
                                                 <td data-title="Actions" class="text-center buttons-block width-140">
-                                                    <a class="btn btn-sm btn-info bold" href="" data-toggle="modal" data-target="#EditModal" onclick="GetEditedObject(@v.Id)">
+                                                    @*<a class="btn btn-sm btn-info bold" href="" data-toggle="modal" data-target="#EditModal" onclick="GetEditedObject(@v.Id)">*@
+                                                    <a class="btn btn-sm btn-info bold" href="#" onclick="edit_supp(@v.Id)">
                                                         Edit
                                                     </a>
                                                     @*<a class="btn btn-sm btn-success bold" href="~/Supplier/Active/@v.Id">
@@ -178,6 +179,11 @@
 
                 </div>
                 </div>
+
+                <div id="updated_div"></div>
+
+
+
                 @*-----------------Main Container Ends---------------*@
             </div>
 
@@ -192,15 +198,329 @@
         }
     </footer>
 
+
+    @*----------------------------POP UP ADD SUPPLIER--------------------------------*@
+
+    <div style="z-index:9999;position:absolute" class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content modal-style-custom">
+
+                <div class="title col-md-12">
+                    <span>Message</span>
+                    <img src="~/img/images/c3.png" class="close mr--13 pull-right" data-dismiss="modal" />
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+
+                        <div class="win text-center">
+                            <h3 class="black-color"><b>New Supplier</b></h3>
+                            <img class="pull-right margin-supplier ml-22" src="~/img/images/supplier.png" />
+
+                            <form id="demo-form2" action="@Url.Action("Create", "Supplier")" method="post" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+
+
+
+                                <div class="col-md-12 text-center">
+
+                                    <div class="col-md-6">
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Company Name <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="company_name" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Company Short Name <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="company_short_name" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="supplier-border"></div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Sales Contact Name <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="sales_contact_name" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Sales Contact Email <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="sales_contact_mail" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div>
+                                                <div class="">
+                                                    <label class="supplier-create-texts" for="middle-name">Sales Contact Phone <span class="required">*</span></label>
+                                                    <div class="col-md-4 col-sm-6 col-xs-12">
+                                                        <input class="width-123" type="text" name="sales_contact_phone" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="">
+                                                    <label class="pull-left ext_margin">Ext</label>
+                                                    <div>
+                                                        <input type="text" class="width-43 mr-23" name="sales_phone_ext" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="clear"></div>
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Sales Contact Mobile <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="sales_contact_mobile" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Sales Contact Fax <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="sales_contact_fax" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="supplier-border"></div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Account Contact Name <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="account_contact_name" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Account Contact Email <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="account_contact_mail" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div>
+                                                <div class="">
+                                                    <label class="supplier-create-texts" for="middle-name">Account Contact Phone <span class="required">*</span></label>
+                                                    <div class="col-md-4 col-sm-6 col-xs-12">
+                                                        <input class="width-123" type="text" name="account_contact_phone" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="">
+                                                    <label class="pull-left ext_margin">Ext</label>
+                                                    <div>
+                                                        <input class="width-43 mr-23" type="text" name="account_ext_phone" required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="clear"></div>
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Account Contact Mobile <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="account_contact_mobile" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Account Contact Fax <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="account_contact_fax" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="supplier-border"></div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Bank Name <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="bank_name" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Account Name <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="account_name" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Account No <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="account_no" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Sort Code <span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input type="text" name="sort_code" required>
+                                            </div>
+                                        </div>
+
+
+
+
+
+
+                                    </div>
+
+
+
+                                    <div class="col-md-6">
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Address<span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input class="ml--50" type="text" name="street_postcode_new" id="add_street_postcode" required>
+                                                <input class="ml--50" type="text" name="town_postcode_new" id="add_town_postcode">
+                                                <input class="ml--50" type="text" name="county_postcode_new" id="add_county_postcode">
+                                                @*<input class="ml--50" type="text" name="address4">
+                                                    <input class="ml--50" type="text" name="address5">*@
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Postcode<span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input class="ml--50" type="text" name="postcode" id="postcode_add">
+                                                <a href="#" onclick="postcode_testing()" @*data-target="#Postcode_Confirmation" data-toggle="modal"*@><img src="~/img/images/ssearch.png" id="input_img" /></a>
+                                            </div>
+                                        </div>
+
+                                        <div id="input_container">
+
+                                        </div>
+
+                                        @*</div>*@
+
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Website<span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input class="ml--50" type="text" name="website" required>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Login<span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input class="ml--50" type="text" name="login" required>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Password<span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input class="ml--50" type="text" name="password" required>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="">Notes<span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <textarea class="width-193 ml--50" name="notes" required></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="supplier-border"></div>
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Credit Limit<span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input class="ml--50" type="text" name="credit_limit" required>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="form-group">
+                                            <label class="supplier-create-texts" for="middle-name">Credit Period<span class="required">*</span></label>
+                                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                                <input class="ml--50" type="text" name="credit_period" required>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                @*<div class="col-md-5 col-sm-6 col-xs-12 col-md-offset-3" style="margin-bottom:15px">
+                                        <input type="submit" value="Add Product" class="btn btn-success" />
+                                    </div>*@
+                                <div class="col-md-12">
+                                    <div class="col-md-3"></div>
+
+                                    <div class="col-md-3">
+                                        <input type="submit" value="Add" class="btn btn-success btn-mini center-block width-145" />
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        @*<a href="" class="btn btn-primary btn-mini center-block" style="width:135px">Cancel</a>*@
+                                        <a href="~/Supplier/List" class="btn btn-primary blue-btn-style-modal btn-mini center-block a-cancel">Cancel</a>
+                                    </div>
+                                    <div class="col-md-3"></div>
+
+
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*----------------------------POP UP END ADD SUPPLIER--------------------------------*@
+
+
+
+   
+
+
+
     @*----------------------------POP UP for POSTCODE CONFIRMATION--------------------------------*@
 
-    <div style="z-index:9999" class="modal fade" id="Postcode_Confirmation" tabindex="-1" role="dialog" aria-hidden="false">
+    <div style="z-index:99999;" class="modal fade" id="Postcode_Confirmation" tabindex="-1" role="dialog" aria-hidden="false">
         <div class="modal-dialog modal-sm">
             <div class="modal-content modal-style-custom">
 
                 <div class="title col-md-12">
                     <span>Confirm</span>
-                    <img src="~/img/images/c3.png" class="close mr--13 pull-right" data-dismiss="modal" onclick="close_modal()" />
+                    <img src="~/img/images/c3.png" class="close mr--13 pull-right" data-dismiss="modal" onclick="close_modal_123()" />
                 </div>
 
                 <div class="col-md-12 col-sm-12 col-xs-12">
@@ -245,27 +565,14 @@
 
 
                                 <script>
-                                    function Add_Postcode_New_Supplier() {
-                                        var street_add = $("#street_postcode").html();
-                                        var town_add = $("#town_postcode").html();
-                                        var county_add = $("#county_postcode").html();
-                                        var postcode_add = $("#postcode_popup").html();
-
-                                        $("#add_street_postcode").val(street_add);
-                                        $("#add_town_postcode").val(town_add);
-                                        $("#add_county_postcode").val(county_add);
-
-                                        $("#Postcode_Confirmation").hide();
-                                        //$("#").val(postcode_add);
-                                        
-                                    }
+                                  
 
 
                                 </script>
 
 
                                 <div class="col-md-6">
-                                    <input type="button" value="Cancel" class="btn btn-primary btn-mini center-block width-95" onclick="close_modal()">
+                                    <input type="button" value="Cancel" class="btn btn-primary btn-mini center-block width-95" onclick="close_modal_123()">
                                 </div>
                                 
 
@@ -297,6 +604,68 @@
     </div>
 
     @*----------------------------POP UP for POSTCODE CONFIRMATION--------------------------------*@
+
+
+    <div class="clearfix"></div>
+
+
+    @*----------------------------POP UP for POSTCODE HOUSE NUMBER--------------------------------*@
+
+    
+    <div style="z-index:999999;" class="modal fade" id="Postcode_House_Number" tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content modal-style-custom">
+
+                <div class="title col-md-12">
+                    <span>Prompt</span>
+                    <img src="~/img/images/c3.png" class="close mr--13 pull-right" data-dismiss="modal" onclick="close_modal_123()" />
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+
+                        <div id="" class="black-color">
+                            <div class="empty-height"></div>
+                            <div class="empty-height"></div>
+
+                            <div class="text-center italic">
+                                
+                                <label>Please Enter House Number</label>
+
+                                <input type="text" id="house_number_postcode_add" value="454564"/>
+
+                            </div>
+
+                            <div class="empty-height"></div><div class="empty-height"></div><div class="empty-height"></div>
+
+                            <div class="col-md-12">
+
+                                <div class="col-md-3"></div>
+
+                                <div class="col-md-6">
+                                    <input type="button" onclick="House_no_Postcode_New_Supplier()" value="Add" class="btn btn-success btn-mini center-block width-95">
+                                </div>
+
+
+
+
+                                <div class="col-md-3"></div>
+                                @*<input type="button" value="Cancel" class="btn btn-primary btn-mini center-block width-95" onclick="close_modal()">*@
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer"></div>
+                <div class=""></div>
+
+            </div>
+        </div>
+    </div>
+
+    @*----------------------------POP UP for POSTCODE HOUSE NUMBER--------------------------------*@
+
 
     @*----------------------------POP UP for EDIT SUPPLIER--------------------------------*@
 
@@ -489,11 +858,11 @@
                                         <div class="form-group">
                                             <label class="supplier-create-texts ml-22" for="middle-name">Address<span class="required">*</span></label>
                                             <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" class="ml--50" name="address1" id="address" required>
-                                                <input type="text" class="ml--50" name="address2">
-                                                <input type="text" class="ml--50" name="address3">
-                                                <input type="text" class="ml--50" name="address4">
-                                                <input type="text" class="ml--50" name="address5">
+                                                <input type="text" class="ml--50" name="street_postcode_edit" id="edit_street_postcode" required>
+                                                <input type="text" class="ml--50" name="town_postcode_edit" id="edit_town_postcode">
+                                                <input type="text" class="ml--50" name="county_postcode_edit" id="edit_county_postcode">
+                                                @*<input type="text" class="ml--50" name="address4">
+                                                <input type="text" class="ml--50" name="address5">*@
                                             </div>
                                         </div>
 
@@ -501,7 +870,7 @@
                                             <label class="supplier-create-texts ml-22" for="middle-name">Postcode<span class="required">*</span></label>
                                             <div class="col-md-3 col-sm-6 col-xs-12">
                                                 <input type="text" class="ml--50" name="postcode" id="postcode_edit">
-                                                <a href="#"><img src="~/img/images/ssearch.png" id="input_img" /></a>
+                                                <a href="#" onclick="postcode_testing_edit()"><img src="~/img/images/ssearch.png" id="input_img" /></a>
                                             </div>
                                         </div>
 
@@ -573,7 +942,8 @@
 
                                     <div class="col-md-3">
                                         <input type="hidden" id="supplier_id" value="" name="supplier_id" />
-                                        <input type="submit" value="Update" class="btn btn-success btn-mini center-block width-145" />
+                                        @*<input type="submit" value="Update" class="btn btn-success btn-mini center-block width-145"/>*@
+                                        @*<a href="~/Supplier/Edit/" class="btn btn-success btn-mini center-block width-145">Update</a>*@
                                     </div>
 
                                     <div class="col-md-3">
@@ -607,6 +977,166 @@
 
 
     @*----------------------------POP UP END EDIT SUPPLIER--------------------------------*@
+
+
+    @*----------------------------POP UP for EDIT SUPPLIER POSTCODE CONFIRMATION--------------------------------*@
+
+    <div style="z-index:9999" class="modal fade" id="Postcode_Confirmation_Edit" tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content modal-style-custom">
+
+                <div class="title col-md-12">
+                    <span>Confirm</span>
+                    <img src="~/img/images/c3.png" class="close mr--13 pull-right" data-dismiss="modal" onclick="close_modal_confirm_postcode()"/>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+
+                        <div id="" class="black-color">
+                            <div class="empty-height"></div><div class="empty-height"></div>
+                            <div class="text-center"><p class="color"><b>Please confirm below address <br />If correct, press ok</b></p></div>
+
+                            <div class="empty-height"></div><div class="empty-height"></div>
+
+                            <div class="text-center italic">
+                                <label id="street_postcode_edit"></label><br />
+                            </div>
+                            <div class="text-center italic">
+                                <label id="town_postcode_edit"></label><br />
+                            </div>
+                            <div class="text-center italic">
+                                <label id="county_postcode_edit"></label><br />
+                            </div>
+                            <div class="text-center italic">
+                                <label id="postcode_popup_edit"><span> ?</span></label><br />
+                            </div>
+
+
+
+
+
+                            <div class="empty-height"></div>
+
+
+
+
+
+
+                            <div class="col-md-12">
+
+
+                                <div class="col-md-6">
+                                    <input type="button" onclick="Add_Postcode_Edit_Supplier()" value="Add" class="btn btn-success btn-mini center-block width-95">
+                                </div>
+
+
+                                <script>
+
+
+
+                                </script>
+
+
+                                <div class="col-md-6">
+                                    <input type="button" value="Cancel" class="btn btn-primary btn-mini center-block width-95" onclick="close_modal_confirm_postcode()">
+                                </div>
+
+
+
+
+                            </div>
+
+
+                            <div class="col-md-12">
+                                <div class="col-md-3"></div>
+
+
+                                <div class="col-md-3"></div>
+
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer"></div>
+                <div class=""></div>
+
+            </div>
+        </div>
+    </div>
+
+    @*----------------------------POP UP for EDIT SUPPLIER POSTCODE CONFIRMATION--------------------------------*@
+
+
+    @*----------------------------POP UP for EDIT SUPPLIER POSTCODE HOUSE NUMBER--------------------------------*@
+
+    <div style="z-index:99999" class="modal fade" id="Postcode_House_Number_Edit" tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content modal-style-custom">
+
+                <div class="title col-md-12">
+                    <span>Prompt</span>
+                    <img src="~/img/images/c3.png" class="close mr--13 pull-right" data-dismiss="modal" onclick="close_modal_confirm_postcode()" />
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+
+                        <div id="" class="black-color">
+                            <div class="empty-height"></div>
+                            <div class="empty-height"></div>
+
+                            <div class="text-center italic">
+                                <label id="">Please Enter House Number</label>
+
+                                <input type="text" id="house_number_postcode_edit"/>
+
+                            </div>
+
+                            <div class="empty-height"></div>
+
+
+
+
+
+
+
+
+                            <div class="empty-height"></div>
+                            <div class="empty-height"></div>
+
+                            <div class="col-md-12">
+
+                                <div class="col-md-3"></div>
+
+                                <div class="col-md-6">
+                                    <input type="button" onclick="House_no_Postcode_Edit_Supplier()" value="Add" class="btn btn-success btn-mini center-block width-95">
+                                </div>
+
+
+
+
+                                <div class="col-md-3"></div>
+                                @*<input type="button" value="Cancel" class="btn btn-primary btn-mini center-block width-95" onclick="close_modal()">*@
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer"></div>
+                <div class=""></div>
+
+            </div>
+        </div>
+    </div>
+
+    @*----------------------------POP UP for EDIT SUPPLIER POSTCODE HOUSE NUMBER--------------------------------*@
 
 
     @*----------------------------POP UP for EXISTING SUPPLIER--------------------------------*@
@@ -748,7 +1278,7 @@
                                         {
                                             <tr onclick="existing_supplier_click(@v.Id)">
                                                 <td id="@String.Concat("suppliers1", v.Id)" data-title="User ID">@v.Name</td>
-                                                <td id="@String.Concat("suppliers2", v.Id)" data-title="Last Name">@v.Address</td>
+                                                <td id="@String.Concat("suppliers2", v.Id)" data-title="Last Name">@v.Street</td>
                                                 <td id="@String.Concat("suppliers3", v.Id)" data-title="Last Name">@v.Post_Code</td>
                                                 <td id="@String.Concat("suppliers4", v.Id)" data-title="First Name">@v.Email</td>
                                                 <td id="@String.Concat("suppliers5", v.Id)" data-title="Email" class="user-emails">@v.Mobile</td>
@@ -818,315 +1348,7 @@
 
 
 
-    @*----------------------------POP UP ADD SUPPLIER--------------------------------*@
-    
-    <div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content modal-style-custom">
-
-                <div class="title col-md-12">
-                    <span>Message</span>
-                    <img src="~/img/images/c3.png" class="close mr--13 pull-right" data-dismiss="modal" />
-                </div>
-
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="x_panel">
-
-                        <div class="win text-center">
-                            <h3 class="black-color"><b>New Supplier</b></h3>
-                            <img class="pull-right margin-supplier ml-22" src="~/img/images/supplier.png" />
-
-                            <form id="demo-form2" action="@Url.Action("Create", "Supplier")" method="post" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
-
-
-
-                                <div class="col-md-12 text-center">
-
-                                    <div class="col-md-6">
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Company Name <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="company_name" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Company Short Name <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="company_short_name" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="supplier-border"></div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Sales Contact Name <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="sales_contact_name" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Sales Contact Email <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="sales_contact_mail" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div>
-                                                <div class="">
-                                                    <label class="supplier-create-texts" for="middle-name">Sales Contact Phone <span class="required">*</span></label>
-                                                    <div class="col-md-4 col-sm-6 col-xs-12">
-                                                        <input class="width-123" type="text" name="sales_contact_phone" required>
-                                                    </div>
-                                                </div>
-
-                                                <div class="">
-                                                    <label class="pull-left ext_margin">Ext</label>
-                                                    <div>
-                                                        <input type="text" class="width-43 mr-23" name="sales_phone_ext" required>
-                                                    </div>
-                                                </div>
-
-                                                <div class="clear"></div>
-
-                                            </div>
-
-
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Sales Contact Mobile <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="sales_contact_mobile" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Sales Contact Fax <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="sales_contact_fax" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="supplier-border"></div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Account Contact Name <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="account_contact_name" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Account Contact Email <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="account_contact_mail" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div>
-                                                <div class="">
-                                                    <label class="supplier-create-texts" for="middle-name">Account Contact Phone <span class="required">*</span></label>
-                                                    <div class="col-md-4 col-sm-6 col-xs-12">
-                                                        <input class="width-123" type="text" name="account_contact_phone" required>
-                                                    </div>
-                                                </div>
-
-                                                <div class="">
-                                                    <label class="pull-left ext_margin">Ext</label>
-                                                    <div>
-                                                        <input class="width-43 mr-23" type="text" name="account_ext_phone" required>
-                                                    </div>
-                                                </div>
-
-                                                <div class="clear"></div>
-
-                                            </div>
-
-
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Account Contact Mobile <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="account_contact_mobile" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Account Contact Fax <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="account_contact_fax" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="supplier-border"></div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Bank Name <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="bank_name" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Account Name <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="account_name" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Account No <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="account_no" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Sort Code <span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input type="text" name="sort_code" required>
-                                            </div>
-                                        </div>
-
-
-
-
-
-
-                                    </div>
-
-
-
-                                    <div class="col-md-6">
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Address<span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input class="ml--50" type="text" name="address1" id="add_street_postcode" required>
-                                                <input class="ml--50" type="text" name="address2" id="add_town_postcode">
-                                                <input class="ml--50" type="text" name="address3" id="add_county_postcode">
-                                                <input class="ml--50" type="text" name="address4">
-                                                <input class="ml--50" type="text" name="address5">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Postcode<span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input class="ml--50" type="text" name="postcode" id="postcode_add">
-                                                <a href="#" onclick="postcode_testing()" @*data-target="#Postcode_Confirmation" data-toggle="modal"*@><img src="~/img/images/ssearch.png" id="input_img" /></a>
-                                            </div>
-                                        </div>
-
-                                        <div id="input_container">
-
-                                        </div>
-
-                                        @*</div>*@
-
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Website<span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input class="ml--50" type="text" name="website" required>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Login<span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input class="ml--50" type="text" name="login" required>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Password<span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input class="ml--50" type="text" name="password" required>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="">Notes<span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <textarea class="width-193 ml--50" name="notes" required></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="supplier-border"></div>
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Credit Limit<span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input class="ml--50" type="text" name="credit_limit" required>
-                                            </div>
-                                        </div>
-
-
-
-                                        <div class="form-group">
-                                            <label class="supplier-create-texts" for="middle-name">Credit Period<span class="required">*</span></label>
-                                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                                <input class="ml--50" type="text" name="credit_period" required>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-
-                                @*<div class="col-md-5 col-sm-6 col-xs-12 col-md-offset-3" style="margin-bottom:15px">
-                <input type="submit" value="Add Product" class="btn btn-success" />
-            </div>*@
-                                <div class="col-md-12">
-                                    <div class="col-md-3"></div>
-
-                                    <div class="col-md-3">
-                                        <input type="submit" value="Add" class="btn btn-success btn-mini center-block width-145" />
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        @*<a href="" class="btn btn-primary btn-mini center-block" style="width:135px">Cancel</a>*@
-                                        <a href="~/Supplier/List" class="btn btn-primary blue-btn-style-modal btn-mini center-block a-cancel">Cancel</a>
-                                    </div>
-                                    <div class="col-md-3"></div>
-
-
-
-                                </div>
-
-                            </form>
-
-                        </div>
-
-
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-
-
-                </div>
-
-
-
-            </div>
-        </div>
-    </div>
-
-    @*----------------------------POP UP END ADD SUPPLIER--------------------------------*@
+   
 
 
 
@@ -1143,94 +1365,15 @@
 
     @*----------------------------POP UP LOGOUT SESSION--------------------------------*@
 
-
-    <script>
-    function close_modal() {
-        $("#Postcode_Confirmation").hide();
-    }
-
-    function postcode_testing() {
-
-        var postcode = $("#postcode_add").val().toUpperCase();
-        //alert(postcode);
-
-        if (postcode == null || postcode == "") {
-            //alert("IF");
-            swal({
-                title: "POSTCODE FIELD IS EMPTY",
-                text: "You have to Enter some Postcode",
-                type: "warning",
-                confirmButtonColor: '#DD6B55',
-                confirmButtonText: 'Okay',
-            })
-
-            return false;
-            postcode_testing()
-        }
-
-        //Get latitude & longitude
-        $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?address=' + postcode + '&sensor=false', function (data) {
-
-
-            var siteArray = data.siteArray;
-
-            // Handle the case where the user may not belong to any groups
-            if (siteArray === null || siteArray === undefined || siteArray === '' || siteArray.length === 0) {
-                $("#street_postcode").text("null");
-                $("#town_postcode").text("null");
-                $("#county_postcode").text("null");
-                $("#postcode_popup").text(postcode);
-
-                $("#Postcode_Confirmation").addClass("in").show("slow");
-            }
-
-            var lat = data.results[0].geometry.location.lat;
-            var lng = data.results[0].geometry.location.lng;
-            //alert("lng  " + lng);
-
-            //Get address
-            $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&sensor=false', function (data) {
-
-                var address = data.results[0].address_components;
-                var street = address[1].long_name;
-                var town = address[2].long_name;
-                var county = address[3].long_name;
-
-                $("#street_postcode").text(street);
-                $("#town_postcode").text(town);
-                $("#county_postcode").text(county);
-                $("#postcode_popup").text(postcode);
-
-                //alert(address);
-
-                $("#Postcode_Confirmation").addClass("in").show("slow");
-
-                //Insert
-                //alert("street  " + street + ', ' + "   town   " + town + ', ' + "    county  " + county + ', ' + "    postcode  " + postcode);
-
-            });
-        });
-    }
-    </script>
-
-
-
+    <script src="~/scripts/supplier/list.js"></script>
 
 
     <script src="~/Scripts/new-js/jquery-1.11.1.min.js"></script>
     <script src="~/Scripts/new-js/jquery.datatables.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            $('#supplier_table').dataTable();
-            $('#kj').dataTable();
 
-        });
-    </script>
-
-
-    <script>
-
+    @*<script>
+        
     function GetEditedObject(Id) {
 
     var url = "/Supplier/GetSupplier/";
@@ -1279,9 +1422,6 @@
     });
     }
 
-
-  
-
-    </script>
+    </script>*@
 
 </body>

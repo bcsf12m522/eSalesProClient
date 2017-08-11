@@ -4,6 +4,8 @@
         <h4 class="pull-left bold black-color">Customer Summary</h4>
     </div>
 
+    @Html.Hidden("RedirectTo", Url.Action("Edit_Sale", "Sale"));
+
     <div class="">
 
         <div class="col-md-12">
@@ -97,7 +99,7 @@
 
                     </tr>
                 </thead>
-                <tbody class="black-color bold" id="invoice_by_customer_partial_view"></tbody>
+                <tbody class="black-color bold background_blue_selectedwith_cursor" id="invoice_by_customer_partial_view"></tbody>
             </table>
             <div class="clearfix"></div>
         </div>
@@ -127,7 +129,7 @@
 
                     </tr>
                 </thead>
-                <tbody class="black-color bold" id="hhh"></tbody>
+                <tbody class="black-color bold background_blue_selectedwith_cursor" id="hhh"></tbody>
 
             </table>
             <div class="clearfix"></div>

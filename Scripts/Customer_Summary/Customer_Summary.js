@@ -72,6 +72,7 @@ function customer_invoice_list(id) {
             document.getElementById("invoice_by_customer_partial_view").innerHTML = data;
             $("#PleaseWait").removeClass('showDiv');
             $("#PleaseWait").addClass('hideDiv');
+            $('#customer_invoices_table').dataTable();
         },
         error: function (response) {
             alert("Error" + response);
@@ -83,7 +84,7 @@ function customer_invoice_list(id) {
 function customer_item_sale_list(id) {
     $("#PleaseWait").addClass('showDiv');
     var customerID = id;
-    //alert(customerID);
+    alert("addsd "+customerID);
 
     $.ajax({
         url: "/Customer/Customer_Item_Sale_List/",
@@ -95,6 +96,7 @@ function customer_item_sale_list(id) {
             document.getElementById("hhh").innerHTML = data;
             $("#PleaseWait").removeClass('showDiv');
             $("#PleaseWait").addClass('hideDiv');
+            $('#item_history_table').dataTable();
         },
         error: function (response) {
             alert("Error" + response);
@@ -116,12 +118,25 @@ function show_customer_summary() {
 
     $("#table_on_dates").hide();
 
+    $("#table_div_Load").hide();
+
     
     //$("#customer_table_div").addClass("none");
 }
 
 
-         
+
+$(document).ready(function () {
+    $('#customer_summary_table').dataTable();
+});
+
+
+function double_click_edit_sale(id) {
+    //alert(id);
+
+    var url = $("#RedirectTo").val();
+    location.href = url + "/" + id;
+}
 
 //jQuery.noConflict();
 //$("#ExistingModal").hide();
