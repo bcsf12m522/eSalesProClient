@@ -1,5 +1,9 @@
 ﻿function customer_summary_list(id, type_id) {
 
+    
+    $("#loader_div").show();
+    $("#customer_summary_loading_hide").hide();
+    
 
     var name = document.getElementById('customer_value_1' + id);
     var phone = document.getElementById('customer_value_2' + id);
@@ -25,6 +29,7 @@
 
     $("#customer_id").val(id);
 
+    $("#id").html(id);
     $("#c_name").html(a);
     $("#c_phone").html(b);
     $("#c_address").html(c);
@@ -32,8 +37,6 @@
     $("#c_notes").html(e);
     $("#c_credit_limit").html(f);
     $("#c_balance").html(g);
-
-
 
     if (type1 == 1) {
         $("#c_type").text("Normal Customer");
@@ -54,10 +57,15 @@
     customer_item_sale_list(id);
     $("#customer_summary").show();
     $("#customer_table_div").hide();
+
+    $("#customer_name_on_Payment_status").html(a);
+
+    //View_Payment(id);
+    //$("#View_Payment_Status_Modal").addClass("in").show("slow");
 }
 
 function customer_invoice_list(id) {
-    $("#PleaseWait").addClass('showDiv');
+    
     var customerID = id;
     //alert(customerID);
 
@@ -70,9 +78,9 @@ function customer_invoice_list(id) {
         success: function (data) {
             //alert("SUCCESS");
             document.getElementById("invoice_by_customer_partial_view").innerHTML = data;
-            $("#PleaseWait").removeClass('showDiv');
-            $("#PleaseWait").addClass('hideDiv');
+            
             $('#customer_invoices_table').dataTable();
+            
         },
         error: function (response) {
             alert("Error" + response);
@@ -82,7 +90,7 @@ function customer_invoice_list(id) {
 }
 
 function customer_item_sale_list(id) {
-    $("#PleaseWait").addClass('showDiv');
+    
     var customerID = id;
     //alert("addsd "+customerID);
 
@@ -94,9 +102,11 @@ function customer_item_sale_list(id) {
         success: function (data) {
             //alert("SUCCESS");
             document.getElementById("hhh").innerHTML = data;
-            $("#PleaseWait").removeClass('showDiv');
-            $("#PleaseWait").addClass('hideDiv');
+            $("#loader_div").hide();
             $('#item_history_table').dataTable();
+
+            $("#customer_summary_loading_hide").show();
+
         },
         error: function (response) {
             alert("Error" + response);
@@ -125,7 +135,6 @@ function show_customer_summary() {
 }
 
 
-
 $(document).ready(function () {
     $('#customer_summary_table').dataTable();
 });
@@ -138,6 +147,130 @@ function double_click_edit_sale(id) {
     location.href = url + "/" + id;
 }
 
+function view_payment_status() {
+    
+    $("#View_Payment_Status_Modal").hide();
+}
+
 //jQuery.noConflict();
 //$("#ExistingModal").hide();
 
+function GetCustomer(ID) {
+    //alert("Aasasasasasa");
+    var page_id = $("#customer_list_edit_modal_value").val();
+
+    $("#PleaseWait").addClass('showDiv');
+
+    if (ID == -1) {
+        ID = document.getElementById("customer_id").value;
+    }
+
+    //alert("ID" + ID);
+
+    $.ajax({
+
+        url: "/Customer/Edit/",
+        data: { id: ID, page_new_id: page_id },
+        cache: false,
+        type: "Get",
+        success: function (data) {
+            document.getElementById("edit_customers").innerHTML = data;
+            $("#PleaseWait").removeClass('showDiv');
+            $("#PleaseWait").addClass('hideDiv');
+
+        },
+        error: function (response) {
+            alert("Error" + response);
+        }
+
+    })
+}
+
+function delete_customer(ID) {
+
+    if (ID == -1) {
+        ID = document.getElementById("customer_id").value;
+    }
+
+    //alert("ID" + ID);
+
+    $.ajax({
+        url: "/Customer/Delete_Customer/",
+        data: { id: ID },
+        cache: false,
+        type: "Get",
+
+        success: function (data) {
+            //alert("ok");
+            document.getElementById("updated_customer_list").innerHTML = data;
+            $('#customer_list_table').dataTable();
+        },
+        error: function () {
+            //alert("FAILURE");
+        }
+    });
+}
+
+
+function View_Payment() {
+    //alert(iDD);
+
+
+
+
+    
+}
+
+function showDateOption() {
+    var from = document.getElementById("fff_date").value;
+    if (from == "") {
+    }
+
+    else {
+        document.getElementById("toooooo_date").removeAttribute('disabled');
+    }
+}
+
+function show_selected_date() {
+    $("#view_payment_div").show();
+    var from = $("#fff_date").val();
+    var to = $("#toooooo_date").val();
+
+    $("#to_date_click").text(to);
+    $("#from_date_click").text(from);
+
+}
+
+function payment_status_by_date() {
+    $("#loader_div_payment").show();
+    $(".hide_all_divs").hide();
+    var iDD = $("#id").text();
+    var from_date = $("#fff_date").val();
+    var to_date = $("#toooooo_date").val();
+
+    //alert(iDD);
+    //alert("form " + from_date);
+    //alert("to " + to_date);
+
+    $.ajax({
+        url: "/Customer/Customer_Payment_Status_by_Date/",
+        data: { id: iDD , from : from_date , to : to_date },
+        cache: false,
+        type: "Get",
+        success: function (data) {
+            //
+
+            document.getElementById("updated_div").innerHTML = data;
+            //$("#PleaseWait").removeClass('showDiv');
+            //$("#PleaseWait").addClass('hideDiv');
+            //$('#item_history_table').dataTable();
+            $("#loader_div_payment").hide();
+            $(".hide_all_divs").show();
+        },
+        error: function (response) {
+            alert("Error" + response);
+        }
+
+    })
+
+}
