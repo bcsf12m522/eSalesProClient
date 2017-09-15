@@ -16,7 +16,7 @@
 
             //alert("SUCCESS");
             $("#date_click_div").show();
-            document.getElementById('updatedDiv').innerHTML = data;
+            document.getElementById('date_click_div').innerHTML = data;
             $("#loader_div").hide();
             //$("#table_on_dates_filter").hide();
             
@@ -51,7 +51,7 @@ function findByInvoice(id) {
             //alert("SUCCESS");
             $('#table_on_dates').dataTable();
             $("#date_click_div").show();
-            document.getElementById('updatedDiv').innerHTML = data;
+            document.getElementById('date_click_div').innerHTML = data;
             $("#loader_div").hide();
 
             $("#table_on_dates_length").hide();
@@ -83,7 +83,7 @@ function findByDocType(id) {
             //alert("DAta" + data);
             
             $("#date_click_div").show();
-            document.getElementById('updatedDiv').innerHTML = data;
+            document.getElementById('date_click_div').innerHTML = data;
             $("#loader_div").hide();
             $('#table_on_dates').dataTable();
         },
@@ -112,7 +112,7 @@ function findByPayType(id) {
         success: function (data) {
             
             $("#date_click_div").show();
-            document.getElementById('updatedDiv').innerHTML = data;
+            document.getElementById('date_click_div').innerHTML = data;
             $("#loader_div").hide();
             $('#table_on_dates').dataTable();
         },
@@ -192,7 +192,7 @@ function findByDate() {
         cache: false,
         success: function (data) {
             $("#date_click_div").show();
-            document.getElementById('updatedDiv').innerHTML = data;
+            document.getElementById('date_click_div').innerHTML = data;
             $("#loader_div").hide();
             $('#table_on_dates').dataTable();
         },
@@ -204,23 +204,73 @@ function findByDate() {
 }
 
 
-function Delete_Sale_by_Ajax(ID) {
-
+function Delete_Sale_by_Ajax(ID,del_id) {
+    //alert("del_id" + del_id);
     //alert("ID" + ID);
-
+    $("#table_div_Load").hide();
+    $("#loader_div").show();
+    $("#date_click_div").hide();
     $.ajax({
         url: "/Sale/Delete_Sale/",
-        data: { id: ID },
+        data: { id: ID , page:del_id },
         cache: false,
-        type: "Get",
-
+        type: "Post",
+        
         success: function (data) {
-            //alert("ok");
-            document.getElementById("updatedDiv").innerHTML = data;
-            //$('#customer_list_table').dataTable();
+            document.getElementById('date_click_div').innerHTML = data;
+            
+            $("#loader_div").hide();
+            if (del_id == 1) {
+                //alert(del_id);
+                $('#tr_' + ID).fadeOut();
+                $("#table_div_Load").show();
+
+                $('#table_Load').dataTable();
+            }
+            else {
+                //alert(del_id);
+                $('#Partial_tr' + ID).fadeOut();
+                $("#date_click_div").show();
+                $('#table_on_dates').dataTable();
+                del_id = 2;
+            }
         },
         error: function () {
-            //alert("FAILURE");
+            alert("FAILURE");
         }
     });
+}
+
+
+function Loading_Sales_Report() {
+    //alert("ASASASAS");
+    $("#table_div_Load").hide();
+
+    $("#loader_div").show();
+    $("#customer_summary").hide();
+    $("#date_click_div").hide();
+
+    $.ajax({
+
+        url: '/Report/SaleReportToday_Yesterday/',
+        data: {  },
+        type: 'Get',
+        cache: false,
+        success: function (data) {
+            //alert("SUCCESS");
+            
+            $("#date_click_div").show();
+            document.getElementById('date_click_div').innerHTML = data;
+            $("#loader_div").hide();
+
+            $('#table_on_dates').dataTable();
+
+            //$("#table_on_dates_length").hide();
+            //$("#table_on_dates_filter").hide();
+
+        },
+        error: function (response) {
+            //alert("ERROR");
+        }
+    })
 }
