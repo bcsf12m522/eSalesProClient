@@ -3,7 +3,7 @@
     //alert("asdd");
     $("#loader_div").show();
     $("#customer_summary_loading_hide").hide();
-    
+    $(".hide_credit_sales_report").hide();
 
     var name = document.getElementById('customer_value_1' + id);
     var phone = document.getElementById('customer_value_2' + id);
@@ -83,7 +83,7 @@ function customer_invoice_list(id) {
             
         },
         error: function (response) {
-            alert("Error" + response);
+            //alert("Error" + response);
         }
 
     })
@@ -109,7 +109,7 @@ function customer_item_sale_list(id) {
 
         },
         error: function (response) {
-            alert("Error" + response);
+            //alert("Error" + response);
         }
 
     })

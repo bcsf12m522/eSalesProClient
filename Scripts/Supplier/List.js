@@ -1,17 +1,26 @@
 ﻿function edit_supp(Id) {
+    var page = $("#pageValue").val();
+    
 
+    //alert("ASASASDADADASDAS");
+    //alert("Page" + page);
     $.ajax({
 
         url: '/Supplier/Edit_Supplier_Values/',
-        data: { id: Id },
+        data: { id: Id , pageValue: page },
         cache: false,
         type: 'Get',
         success: function (data) {
+            //alert("SUCCESS");
             document.getElementById('updated_div').innerHTML = data;
             $("#EdittttModal").addClass("in").show("slow");
+            if (page == "Purchase") {
+                $("#Existing_Supplier_Modal").hide();
+            }
+            
         },
         error: function (response) {
-
+            alert("ERROR");
         }
 
 
@@ -19,6 +28,23 @@
 
 }
 
+    //to diable right click in certain element
+    $('.disableRightClick').on("contextmenu", function (e) {
+
+        return false;
+    });
+
+function cancel_purchase() {
+    $("#EdittttModal").hide();
+}
+
+function cancel_purchase() {
+    $("#EdittttModal").hide();
+}
+
+function cancel_purchase() {
+    $("#EdittttModal").hide();
+}
 
 
 function close_modal_123() {

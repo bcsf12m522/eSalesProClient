@@ -358,18 +358,10 @@ function Different_Address() {
     }
 }
 
-function Different_Address_New() {
-    if (document.getElementById("billing_address_checkbox_new").checked) {
-        $(".Shipping_Address_Div_New").hide();
-    }
-    else {
-        $(".Shipping_Address_Div_New").show();
-    }
-}
 
 function close_modal() {
     $("#Edit_Customer_on_Context").toggle();
-    $("#Edit_Customer_Modal").hide();
+    //$("#Edit_Customer_Modal").hide();
     
 
     //alert("CLOSE");
@@ -500,6 +492,17 @@ function checkCreditLimit() {
     }
 }
 
+function draft_saved() {
+    //alert("DRAFT");
+
+    $("#payment_status_id").val(2);
+    //$("#po_status").val(1);
+    var paid= $("#amount_paid_hidden").val();
+    $("#left_amount_hidden").val(paid);
+    $("#amount_paid_hidden").val(0);
+    //payment_status();
+}
+
 function payment_status() {
     var selectedValue = document.getElementById("payment_status_id").value;
     //alert(selectedValue);
@@ -509,6 +512,7 @@ function payment_status() {
 
     if (selectedValue == 1) {
         $("#amount_paid_hidden").val(gross);
+        $("#left_amount_hidden").val(0);
         $("#custom_date_show_invoice").hide();
         $("#partial_payment_option").hide();
         $("#Deposit_payment_option").hide();
@@ -639,15 +643,20 @@ function Deposit_Payment() {
 }
 
 function RemoveAddedRow(id) {
-    var total = document.getElementById("invoice_total" + id).value;
-    var net = $("#net_invoice_hidden").val();
+    //alert(id);
+    var total = document.getElementById("invoice_total_vat" + id).value;
+    var net = $("#gross_invoice").val();
 
     //var vat = $("#vat_invoice").val();
+    
 
+    //var new_net = net - total;
+    //var vat = (new_net * 0.2);
+    //var gross = +(new_net * 0.2) + +new_net;
 
-    var new_net = net - total;
-    var vat = (new_net * 0.2);
-    var gross = +(new_net * 0.2) + +new_net;
+    var gross = (net - total).toFixed(2);
+    var new_net = (gross / 1.2).toFixed(2);
+    var vat = (gross - new_net).toFixed(2);
 
     $("#net_invoice_hidden").val(new_net);
     $("#net_invoice").html("£" + new_net);
@@ -664,7 +673,15 @@ function RemoveAddedRow(id) {
     //alert("NEW NET" + new_net);
     $("#rowId" + id).closest(".remove_div").remove();
     rowcounterMinus();
-    
+    $("#serial_number_value_input_checkbox" + id).val(0);
+
+    payment_status();
+
+    //$("#serial_number_value_input_checkbox" + id).val(0);
+
+    //$("#serial_number_value_input_checkbox" + id).closest(".remove_div").remove();
+
+
     //alert("NET" + a);
 }
 
@@ -731,6 +748,9 @@ function tbody_add_record(id, count) {
     //alert(price_inner);
 
     //alert("ITEM SALE2");
+
+    //$("#payment_status_id").prop("disabled", false);
+
     checkSoldHistory(count);
     Total(count);
 
@@ -813,10 +833,11 @@ function addNewRow() {
 
     var doc_value = $("#doc_type_page_load").val();
     //alert("doc_value       " + doc_value);
-
+    
     arguments.callee.myStaticVar = arguments.callee.myStaticVar || 2;
     var count = arguments.callee.myStaticVar++;
     document.getElementById("counters").value = count;
+
 
     var hrRowkoUsKaNumberDeneKLiye = document.getElementById('ApnaApnaRowNumber').value;
     document.getElementById('ApnaApnaRowNumber').value = +hrRowkoUsKaNumberDeneKLiye + +1;
@@ -878,6 +899,8 @@ function productList(e, char, serialnumber) {
         if (Count == "") {
             Count = 1;
         }
+     
+
         //alert("Product List Counter ="+  Count)
 
         $("#productList").show();
@@ -913,12 +936,17 @@ function productList(e, char, serialnumber) {
 }
 
 
-//function Postcode_Enter_Click(e) {
-//    if (e.keyCode === 13) {
-//        e.preventDefault(); // Ensure it is only this code that rusn
-//        postcode_testing_edit();
-//    }
-//}
+function Clear_Row_Values() {
+    $("#codeforProduct1").val("");
+    $("#invoice_description1").val("");
+    $("#invoice_quantity1").val("");
+    $("#invoice_price1").val("");
+    $("#invoice_price_vat1").val("");
+    $("#invoice_total1").val("");
+    $("#invoice_total_vat1").val("");
+    $("#invoice_discount1").val("");
+
+}
 
 
 
@@ -1011,6 +1039,8 @@ function Total(rownum) {
     $("#gross_invoice").val(gross);
 
     $("#amount_paid_hidden").val(gross);
+    $("#payment_status_id").val(1);
+    $("#partial_payment_option").hide();
 }
 
 function Total2(rownum) {
@@ -1021,7 +1051,9 @@ function Total2(rownum) {
     var quantity = document.getElementById('invoice_quantity' + rownum).value;
 
     var priceVat = document.getElementById('invoice_price_vat' + rownum).value;
-    var price = (5 / 6) * (priceVat);
+    var price = ((priceVat) / 1.2).toFixed(2);
+
+    
 
     var total = quantity * price;
     var totalVat = quantity * priceVat;
@@ -1053,13 +1085,13 @@ function Total2(rownum) {
     //alert("sizeFIRST" + size);
     for (i = 1; i <= size ; ++i) {
 
-        check = document.getElementById('invoice_total' + i);
+        check = document.getElementById('invoice_total_vat' + i);
 
         //alert("CHECK" + check);
 
         if (check !== null) {
 
-            totaaaal = document.getElementById('invoice_total' + i).value;
+            totaaaal = document.getElementById('invoice_total_vat' + i).value;
 
             a = +totaaaal + +a;
         }
@@ -1073,27 +1105,58 @@ function Total2(rownum) {
 
     var a_parsed = a.toFixed(2);
 
-    $("#net_invoice").html("£" + a_parsed);
-    var total_vat = (((20 / 100)) * a_parsed).toFixed(2);
+    //$("#net_invoice").html("£" + a_parsed);
+    //var total_vat = (((20 / 100)) * a_parsed).toFixed(2);
 
-    var gross_without_parse = +a_parsed + +total_vat;
+    //var gross_without_parse = +a_parsed + +total_vat;
 
-    var gross = gross_without_parse.toFixed(2);
+    //var gross = gross_without_parse.toFixed(2);
 
 
 
-    var discounted = gross - global_discount;
+    //var discounted = gross - global_discount;
+
+
+    //$("#invoice_vat").html(total_vat)
+    //$("#invoice_gross").html(gross);
+
+    //$("#net_invoice_hidden").val(a_parsed);
+    //$("#vat_invoice").val(total_vat);
+    //$("#gross_invoice").val(gross);
+
+    //$("#amount_paid_hidden").val(gross);
+    ////alert("ASASSASAS");
+    //$("#payment_status_id").val(1);
+    //$("#partial_payment_option").hide();
+
+
+
+    
+    var net_pr = (a_parsed / 1.2).toFixed(2);
+    $("#net_invoice").html("£" + net_pr);
+    
+    var total_vat = (a_parsed - net_pr).toFixed(2);
+
+    //var gross_without_parse = +a_parsed + +total_vat;
+
+    //var gross = gross_without_parse.toFixed(2);
+
+
+
+    var discounted = a_parsed - global_discount;
 
 
     $("#invoice_vat").html(total_vat)
-    $("#invoice_gross").html(gross);
+    $("#invoice_gross").html(a_parsed);
 
-    $("#net_invoice_hidden").val(a_parsed);
+    $("#net_invoice_hidden").val(net_pr);
     $("#vat_invoice").val(total_vat);
-    $("#gross_invoice").val(gross);
+    $("#gross_invoice").val(a_parsed);
 
-    $("#amount_paid_hidden").val(gross);
+    $("#amount_paid_hidden").val(a_parsed);
     //alert("ASASSASAS");
+    $("#payment_status_id").val(1);
+    $("#partial_payment_option").hide();
 }
 
 
@@ -1244,22 +1307,31 @@ function checkSoldHistory(counter) {
 
 
 function outstanding_balance_function() {
+    $(".hide_invoice").hide();
+    $("#loader_div").show();
     //alert("Outstanding Balance");
+    var payment_method = $("#payment_method_id_outstanding_balance").val();
+    //alert("payment_method " + payment_method);
     var customer_id = $("#exist_customer_id").val();
-    //alert(customer_id);
-    var amount = $("#outstanding_amount").val();
+    //alert("customer_id "+customer_id);
+    //var amount = $("#outstanding_amount").val();
+    //alert("amount " + amount);
 
+    var amount = $("#customer_balance").text();
+    //alert("amount " + amount);
 
     $.ajax({
 
         url: '/Customer/Paying_Outstanding_Balance/',
-        data: { amount_paid: amount, id: customer_id },
+        data: { amount_paid: amount, id : customer_id, method_id : payment_method },
         cache: false,
         type: "Get",
         success: function (data) {
-            //alert("Success");
+            //alert(data);
+            $(".hide_invoice").show();
+            $("#loader_div").hide();
             $("#outstanding_balance").val("£" + data);
-
+            location.reload();
         },
         error: function (response) {
             alert("Error");
@@ -1338,151 +1410,178 @@ function rowcounterPlus() {
 
 function rowcounterMinus() {
     var number = document.getElementById('rowCounterrr').value;
-
+    
     document.getElementById('rowCounterrr').value = number - 1;
     //alert("CROSS" + document.getElementById('rowCounterrr').value)
 }
 
 
+//----------------------------SERIAL NUMBER JS FUNCTIONS------------------------------------
+
+function serial_number_click(counter) {
+    //alert(counter);
+    $("#EnterCounterSerialNumber").val(0);
+    $("#rowCounterSerialNumber").val(counter);
+    var quantity = $("#invoice_quantity" + counter).val();
+
+    
 
 
+    if (quantity == null || quantity == "") {
+        //alert(p_name);
 
-
-function Postcode_Enter_Click(e) {
-    if (e.keyCode === 13) {
-        e.preventDefault(); // Ensure it is only this code that rusn
-        postcode_testing();
-
-    }
-}
-
-function postcode_testing() {
-
-    var postcode = $("#postcode_add").val().toUpperCase();
-    //alert(postcode);
-
-    if (postcode == null || postcode == "") {
-        //alert("IF");
         swal({
-            title: "POSTCODE FIELD IS EMPTY",
-            text: "You have to Enter some Postcode",
+            title: "NO PRODUCT SELECTED",
+            text: "Please Select the Product to view the Image",
             type: "warning",
             confirmButtonColor: '#DD6B55',
             confirmButtonText: 'Okay',
-        })
+        },
 
+        function () {
+        });
         return false;
-        postcode_testing()
     }
 
-    //Get latitude & longitude
-    $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?address=' + postcode + '&sensor=false', function (data) {
+    else {
+        $("#Serial_Number_Modal").addClass("in").show("slow");
+
+        $("#quantity_for_loop").val(quantity);
+
+        document.getElementById("serial_number_checkedbox").checked = false;
+        $("#serial_number_value").prop("readonly", true);
+
+        $('#serial_number' + counter).css('pointer-events', 'none');
+
+        $("#invoice_quantity" + counter).prop("readonly", true);
+        //alert("Quantity " + quantity);
+    }
+
+}
 
 
-        var siteArray = data.siteArray;
+function Serial_Number_Enter_Click(e) {
 
-        // Handle the case where the user may not belong to any groups
-        if (siteArray === null || siteArray === undefined || siteArray === '' || siteArray.length === 0) {
-            $("#street_postcode").text("null");
-            $("#town_postcode").text("null");
-            $("#county_postcode").text("null");
-            $("#country_postcode").text("null");
-            $("#postcode_popup").text(postcode);
+    //alert("Serial Number");
 
-            $("#Postcode_Confirmation").addClass("in").show("slow");
+    var counter = $("#rowCounterSerialNumber").val();
+    var loop_size = $("#quantity_for_loop").val();
+    var enter_count = $("#EnterCounterSerialNumber").val();
+
+    //alert("enter_count " + enter_count + "  loop_size  " + loop_size)
+
+    if (enter_count != loop_size) {
+        //    alert("IF COUNT");
+
+        if (e.keyCode === 13) {
+            //alert("ENTER");
+            //e.preventDefault(); // Ensure it is only this code that rusn
+
+            //alert("variable " + variable);
+
+            var variable = " (Serial No." + $("#serial_number_value").val() + ")";
+            var box = $("#invoice_description" + counter);
+            box.val(box.val() + variable);
+
+            enter_count = +enter_count + +1;
+
+            $("#EnterCounterSerialNumber").val(enter_count);
+
+            $("#serial_number_value").val("")
+            if (enter_count == loop_size) {
+                $("#Serial_Number_Modal").hide();
+            }
+            //alert($("#invoice_description" + counter).append($.trim(variable).text()));
+            //$("#invoice_description"+counter).append(variable);
         }
-
-        var lat = data.results[0].geometry.location.lat;
-        var lng = data.results[0].geometry.location.lng;
-        //alert("lng  " + lng);
-
-        //Get address
-        $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&sensor=false', function (data) {
-
-            var address = data.results[0].address_components;
-            var street = address[1].long_name;
-            var town = address[2].long_name;
-            var county = address[4].long_name;
-            var country = address[5].long_name;
-
-            $("#street_postcode").text(street);
-            $("#town_postcode").text(town);
-            $("#county_postcode").text(county);
-            $("#country_postcode").text(country);
-            $("#postcode_popup").text(postcode);
-
-            //alert(address);
-
-            $("#Postcode_Confirmation").addClass("in").show("slow");
-
-            //Insert
-            //alert("street  " + street + ', ' + "   town   " + town + ', ' + "    county  " + county + ', ' + "    postcode  " + postcode);
-
-        });
-    });
-}
-
-function Add_Postcode_New_Supplier() {
-
+    }
     
-
-    var street_add = $("#street_postcode").html();
-    var town_add = $("#town_postcode").html();
-    var county_add = $("#county_postcode").html();
-    var country_add = $("#country_postcode").html();
-    var postcode_add = $("#postcode_popup").html();
-    
-    $("#add_street_postcode").val(street_add);
-    $("#add_town_postcode").val(town_add);
-    $("#add_county_postcode").val(county_add);
-    $("#add_country_postcode").val(country_add);
-
-
-    //------------------FOR SHIPPING ADDRESS--------------------//
-
-    $("#shipping_street_add").val(street_add);
-    $("#shipping_town_add").val(town_add);
-    $("#shipping_county_add").val(county_add);
-    $("#shipping_country_add").val(country_add);
-    $("#shipping_postcode_add").val(postcode_add);
-
-    //------------------FOR SHIPPING ADDRESS--------------------//
-
-
-    $("#Postcode_Confirmation").hide();
-    $("#CreateModal").hide();
-    //$("#Postcode_Confirmation").addClass("out");
-
-
-
-    $("#Postcode_House_Number").addClass("in").show("slow");
 
 }
 
-function House_no_Postcode_New_Supplier() {
-    var house = $("#house_number_postcode_add").val();
 
-    var street = $("#add_street_postcode").val();
+function close_serial_number_modal() {
+    $("#Serial_Number_Modal").hide();
+}
 
-    if (house == "" || house == null) {
-        $("#add_street_postcode").val(street);
+
+function serial_number_checkbox() {
+    //alert("sadsadsadas");
+    var value = $("#serial_number_checkedbox").val();
+    var row_count = $("#rowCounterSerialNumber").val();
+    
+
+
+    if (document.getElementById("serial_number_checkedbox").checked) {
+        //alert("IF");
+        $("#serial_number_value_input_checkbox" + row_count).val(1);
+        $("#serial_number_value").prop("readonly", false);
+        $(".hide_close_btn_on_checked").hide();
     }
     else {
-        $("#add_street_postcode").val(house + " " + street);
-        $("#shipping_street_add").val(house + " " + street);
+        $("#serial_number_value_input_checkbox" + row_count).val(0);
+        $("#serial_number_value").prop("readonly", true);
+        $(".hide_close_btn_on_checked").show();
+        //alert("ELSE");
     }
-    $("#Postcode_House_Number").hide();
-    //$("#Postcode_Confirmation").hide();
 
-    $("#CreateModal").addClass("in").show("slow");
+
+    //if (value == 1) {
+    //    $("#serial_number_value").prop("readonly", false);
+    //}
+
+    //else {
+    //    var value = $("#serial_number_checkedbox").val(0);
+    //}
+
 }
 
-function close_modal_new_Customer() {
-    $("#Postcode_Confirmation").hide();
-    $("#Postcode_House_Number").hide();
-}
 
-function close_modal_cancel_Customer() {
-    $("#Postcode_House_Number").hide();
-    $("#CreateModal").addClass("in").show("slow");
-}
+
+//----------------------------SERIAL NUMBER JS FUNCTIONS------------------------------------
+
+
+
+
+
+//function Serial_Number_Enter_Click(e) {
+
+//    //alert("Serial Number");
+
+//    var counter = $("#rowCounterSerialNumber").val();
+//    var loop_size = $("#quantity_for_loop").val();
+//    var enter_count = $("#EnterCounterSerialNumber").val();
+
+//    //alert("enter_count " + enter_count + "  loop_size  " + loop_size)
+
+//    if (enter_count != loop_size) {
+//        //    alert("IF COUNT");
+
+//        if (e.keyCode === 13) {
+//            //alert("ENTER");
+//            //e.preventDefault(); // Ensure it is only this code that rusn
+
+//            //alert("variable " + variable);
+
+//            var variable = " (Serial No. " + $("#serial_number_value").val() + ")";
+//            var box = $("#invoice_description" + counter);
+//            box.val(box.val() + variable);
+
+//            enter_count = +enter_count + +1;
+
+//            $("#EnterCounterSerialNumber").val(enter_count);
+
+//            $("#serial_number_value").val("")
+//            if (enter_count == loop_size) {
+//                $("#Serial_Number_Modal").hide();
+//            }
+//            //alert($("#invoice_description" + counter).append($.trim(variable).text()));
+//            //$("#invoice_description"+counter).append(variable);
+//        }
+//    }
+//}
+
+
+//function close_serial_number_modal() {
+//    $("#Serial_Number_Modal").hide();
+//}

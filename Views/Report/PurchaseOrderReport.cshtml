@@ -1,5 +1,5 @@
 ﻿@model List<eSalesPro.Models.Purchase_Order>
-<body id="body-index">
+<body id="body-index" onload="Loading_Purchase_Report()">
     <div id="sticky-footer-wrap">
 
         @*-----------------Top Navigation Start---------------*@
@@ -26,17 +26,22 @@
                     <div class="bggg-img">
                         <div>
 
-                            @{
-                                Html.RenderPartial("Loader_Div");
-                            }
+
 
 
                             <div class="col-md-12">
 
-                                <div class="col-md-4 pl-0">
-                                    <h3 class="bold font-20">EPOS Report Purchase Order<small></small></h3>
+                                @*@{
+                                    Html.RenderPartial("Loader_Div");
+                                }*@
+                                <div id="loader_div" class="">
+                                    <img src="~/img/loading.gif" class="ajax_loader">
                                 </div>
-                                <div class="pull-right col-md-8 mt-10 pr-0">
+
+                                <div class="col-md-3 pl-0">
+                                    <h3 class="bold font-20">Purchase Order Report<small></small></h3>
+                                </div>
+                                <div class="pull-right col-md-9 mt-10 pr-0">
 
                                     <div class="pull-right">
                                         <input required type="date" disabled id="to_date" oninput="poByDate();" class="date-width-height" name="to_date">
@@ -54,6 +59,11 @@
                                     <div class="pull-right">
                                         <input type="text" onkeypress='validate(event)' onkeyup="poByNumber(this.value);" class="width_78_height text-center mr-7" placeholder="Number" name="stock_qty" id="login">
                                     </div>
+
+                                    @*<div class="pull-right">
+                                            <input placeholder="Serial No" class="width_78_height mr-3"/>
+                                        </div>*@
+
                                     <div class="pull-right">
                                         <select name="sale_type" required="" onchange="poByPayStatus(this.value);" class="form-control">
 
@@ -109,7 +119,7 @@
 
                             <div class="col-md-3"></div>
                             <div class="col-md-2 pull-right pr-0 mb-20">
-                                <a href="#" class="btn btn-primary blue-btn-style btn-mini bold pull-right width-195">Print</a>
+                                <a href="/Purchase/List_Draft" class="btn btn-primary blue-btn-style btn-mini bold pull-right width-195">Draft List</a>
                             </div>
 
                             <div class="col-md-4 pull-right">
@@ -118,7 +128,7 @@
                             <div class="clearfix"></div>
 
                         </div>
-                        
+
 
                         <div class="clearfix"></div>
 
@@ -130,12 +140,12 @@
                         <div id="date_click_div" class="">
 
                             <div id="updatedDiv" class="col-md-12">
-                                
+
                                 <div class="clearfix"></div>
 
-                                
 
-                                
+
+
 
                             </div>
 
@@ -233,13 +243,13 @@
 
 
 
-   
 
-    
+
+
 
     <script>
 
-   
+
 
 
 

@@ -49,9 +49,9 @@
                                         <input  type="text" onkeyup='findByUser();' class="width_78_height text-center mr-7" placeholder="User..." name="stock_qty" id="User_ID">
                                     </div>
 
-                                    @*<div class="pull-left">
-                                        <input type="text" onkeypress='validate(event)' readonly class="width_78_height text-center mr-7" placeholder="Serial no..." name="stock_qty" id="login">
-                                    </div>*@
+                                    <div class="pull-left">
+                                        <input type="text" @*onkeypress='validate(event)'*@ onkeypress="findBySerial(event)" class="width_78_height text-center mr-7" placeholder="Serial no..." name="stock_qty" id="serial_number_id">
+                                    </div>
 
                                     <div class="pull-left">
                                         <input type="text" onkeyup='findByInvoice(this.value)' class="width_78_height text-center mr-7" placeholder="Sales no..." name="stock_qty" id="invoice_ID">
@@ -194,6 +194,7 @@
     <script src="~/scripts/customer_summary/customer_summary.js"></script>
     <script src="~/scripts/report/sale_report.js"></script>
     <script src="~/Scripts/Customer/Edit_Customers.js"></script>
+    <script src="~/Scripts/Postcode_Customer/Edit_Customer_Postcode.js"></script>
     @*<script src="~/Scripts/new-js/jquery-1.11.1.min.js"></script>
     <script src="~/Scripts/new-js/jquery.datatables.min.js"></script>*@
 

@@ -29,7 +29,7 @@
 
     run_invoice();
 
- 
+    $("#payment_status_value_after_disabled").val(status_type);
 
     //alert("NOT RUN INVOICE");
 }
@@ -56,7 +56,7 @@ function make_readonly_on_Invoice(doc_type) {
         if (doc_type == 1 || doc_type == 3) {
 
             $("#codeforProduct" + i).prop("disabled", true).css({ "background-color": "white" });
-            $("#invoice_description" + i).prop("disabled", true).css("background-color", "white");
+            $("#invoice_description" + i).prop("readonly", true).css("background-color", "white");
             $("#invoice_quantity" + i).prop("disabled", true).css("background-color", "white");
             $("#invoice_price" + i).prop("disabled", true).css("background-color", "white");
             $("#invoice_price_vat" + i).prop("disabled", true).css("background-color", "white");
@@ -69,7 +69,7 @@ function make_readonly_on_Invoice(doc_type) {
 
         else {
             $("#codeforProduct" + i).prop("disabled", false);
-            $("#invoice_description" + i).prop("disabled", false);
+            $("#invoice_description" + i).prop("readonly", false);
             $("#invoice_quantity" + i).prop("disabled", false);
             $("#invoice_price" + i).prop("disabled", false);
             $("#invoice_price_vat" + i).prop("disabled", false);
@@ -725,10 +725,10 @@ function tbody_add_record(id, count) {
     $("#productList").hide();
 
    
-    checkSoldHistory(count);
+    //checkSoldHistory(count);
     Total(count);
 
-
+    //alert("ASDADDDD");
 
 
 }
@@ -797,20 +797,29 @@ function global_discount() {
 
 
 
-function addNewRow() {
+function addNewRow(num) {
+    var doc_value = $("#doc_type_page_load").val();
+    //alert("doc_value    " + doc_value);
+    if (doc_value != 2) {
+        return false;
+    }
 
 
-    arguments.callee.myStaticVar = arguments.callee.myStaticVar || 2;
+    
+    arguments.callee.myStaticVar = arguments.callee.myStaticVar || num+1;
     var count = arguments.callee.myStaticVar++;
+    //alert("count " + count);
     document.getElementById("counters").value = count;
 
     var hrRowkoUsKaNumberDeneKLiye = document.getElementById('ApnaApnaRowNumber').value;
     document.getElementById('ApnaApnaRowNumber').value = +hrRowkoUsKaNumberDeneKLiye + +1;
     hrRowkoUsKaNumberDeneKLiye = +hrRowkoUsKaNumberDeneKLiye + +1;
-    $.ajax({
 
+    //alert("hrRowkoUsKaNumberDeneKLiye " + hrRowkoUsKaNumberDeneKLiye);
+
+    $.ajax({
         url: '/Product/AddNewRow/',
-        data: { counter: count, serialkisser: hrRowkoUsKaNumberDeneKLiye },
+        data: { counter: count, serialkisser: hrRowkoUsKaNumberDeneKLiye, doc_type: doc_value },
         type: "Get",
         cache: false,
         success: function (data) {
@@ -820,8 +829,10 @@ function addNewRow() {
 
             document.getElementById('newrow' + count).innerHTML = data;
 
+        },
+        error: function (response) {
+            //alert("ERROR");
         }
-
     })
 }
 
@@ -894,11 +905,15 @@ function productList(e, char, serialnumber) {
 
 
 
+function give_refund_value_set() {
+    var check_give_refund = $("#check_give_refund_value").val(-1);
+}
 
 function Total(rownum) {
-
+    var check_give_refund = $("#check_give_refund_value").val();
     var quantity = document.getElementById('invoice_quantity' + rownum).value;
 
+    //alert("quantity" + quantity);
 
     var price = document.getElementById('invoice_price' + rownum).value;
 
@@ -915,17 +930,18 @@ function Total(rownum) {
     document.getElementById('invoice_price_vat' + rownum).value = priceVatTotal;
     document.getElementById('invoice_total_vat' + rownum).value = totalVat;
 
-
+    //alert("quantity" + quantity);
     //Refund Modal Tables values Setting
 
-    document.getElementById('ref_quantity' + rownum).value = quantity;
-    document.getElementById('ref_price' + rownum).value = price;
-    document.getElementById('ref_priceVat' + rownum).value = priceVatTotal;
-    document.getElementById('ref_total' + rownum).value = total;
-    document.getElementById('ref_totalVat' + rownum).value = totalVat;
-
+    if (check_give_refund == -1) {
+        document.getElementById('ref_quantity' + rownum).value = quantity;
+        document.getElementById('ref_price' + rownum).value = price;
+        document.getElementById('ref_priceVat' + rownum).value = priceVatTotal;
+        document.getElementById('ref_total' + rownum).value = total;
+        document.getElementById('ref_totalVat' + rownum).value = totalVat;
+    }
     //Refund Modal Tables values Setting
-
+    //alert("quantity2   " + quantity);
     $("#total_hidden" + rownum).val(total);
     $("#total_vat_hidden" + rownum).val(totalVat);
 
@@ -995,7 +1011,7 @@ function Total(rownum) {
 }
 
 function Total2(rownum) {
-
+    var check_give_refund = $("#check_give_refund_value").val();
     var quantity = document.getElementById('invoice_quantity' + rownum).value;
 
     var priceVat = document.getElementById('invoice_price_vat' + rownum).value;
@@ -1011,12 +1027,13 @@ function Total2(rownum) {
 
     //Refund Modal Tables values Setting
 
-    document.getElementById('ref_quantity' + rownum).value = quantity;
-    document.getElementById('ref_price' + rownum).value = price;
-    document.getElementById('ref_priceVat' + rownum).value = priceVat;
-    document.getElementById('ref_total' + rownum).value = total;
-    document.getElementById('ref_totalVat' + rownum).value = totalVat;
-
+    if (check_give_refund == -1) {
+        document.getElementById('ref_quantity' + rownum).value = quantity;
+        document.getElementById('ref_price' + rownum).value = price;
+        document.getElementById('ref_priceVat' + rownum).value = priceVat;
+        document.getElementById('ref_total' + rownum).value = total;
+        document.getElementById('ref_totalVat' + rownum).value = totalVat;
+    }
     //Refund Modal Tables values Setting
 
 
@@ -1536,6 +1553,7 @@ function checkCreditLimit() {
 
 
     var limit = limit_float.toFixed(2);
+
     //alert("gross" + gross);
     //alert("limit" + limit);
 
@@ -1576,6 +1594,8 @@ function checkCreditLimit() {
         }
 
         else {
+
+
             if (parseFloat(gross) > parseFloat(limit)) {
 
                 //alert("Gross" + gross);
@@ -1595,7 +1615,6 @@ function checkCreditLimit() {
                 return false;
             }
             else {
-                //alert("Not Reached your Credit Limit");
                 return true;
             }
         }
@@ -1625,16 +1644,7 @@ function rowcounterMinus() {
     //alert("CROSS" + document.getElementById('rowCounterrr').value)
 }
 
-function Different_Address() {
-    //alert("ASASASSSSS");
-    if (document.getElementById("billing_address_checkbox").checked==true) {
-        alert("IF");
-    }
 
-    else if (document.getElementById("billing_address_checkbox").checked == false) {
-        alert("ELSE");
-    }
-}
 
 function Partial_Payment_Calculation_on_Edit() {
     var gross = $("#partial_amount").val();
